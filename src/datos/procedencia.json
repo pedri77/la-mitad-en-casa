@@ -1,0 +1,18 @@
+{
+  "con_padres": {
+    "fuente": "Eurostat: jóvenes de 25 a 34 años que viven con sus padres, en % (EU-SILC, tabla ilc_lvps08)",
+    "url": "https://ec.europa.eu/eurostat/databrowser/view/ilc_lvps08/default/table",
+    "datos": "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/ilc_lvps08/?format=SDMX-CSV&compressed=false",
+    "licencia": "Eurostat, CC BY 4.0 (política de reutilización de la Comisión Europea, Decisión 2011/833/UE)",
+    "descargado": "2026-11-18",
+    "nota": "Encuesta de condiciones de vida (EU-SILC). Incluye a quien aporta ingresos al hogar de sus padres o se beneficia de ellos. La media de la UE-27 de 2010 a 2018 es una estimación de Eurostat (bandera e). Lituania 2025 es provisional y Luxemburgo 2025 tiene corte de serie"
+  },
+  "edad": {
+    "fuente": "Eurostat: edad media estimada a la que los jóvenes dejan el hogar de sus padres (encuesta de población activa, tabla yth_demo_030)",
+    "url": "https://ec.europa.eu/eurostat/databrowser/view/yth_demo_030/default/table",
+    "datos": "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/yth_demo_030/?format=SDMX-CSV&compressed=false",
+    "licencia": "Eurostat, CC BY 4.0 (política de reutilización de la Comisión Europea, Decisión 2011/833/UE)",
+    "descargado": "2026-11-18",
+    "nota": "Encuesta de población activa (EU-LFS), distinta de EU-SILC. España tiene cortes de serie en 2005 y 2021, y la UE-27 en 2021: la serie empieza en 2005 y el corte de 2021 se marca"
+  }
+}

@@ -1,0 +1,24 @@
+# Hallazgos de la prueba de web-datos (segunda web: «La mitad sigue en casa», Eurostat)
+
+Formato: fase · qué pasó · qué faltaba en la skill · arreglo propuesto.
+
+| # | Fase | Qué pasó | Qué faltaba | Arreglo propuesto |
+|---|---|---|---|---|
+| 1 | 1. Concepto | `numero()` de `datos.py` asume formato español: «29.4» de Eurostat se convertiría en 294 sin error. | Plantilla pensada solo para INE/Interior. | `numero(v, decimal=",")` con parámetro y doc: Eurostat, OCDE y Banco Mundial usan punto decimal. |
+| 2 | 3. Datos | El Python de uv (python-build-standalone) no valida la cadena TLS de ec.europa.eu en macOS (`CERTIFICATE_VERIFY_FAILED`); curl del sistema sí. Cargar `/etc/ssl/cert.pem` no lo arregla. | Nada en la skill sobre fallos TLS de urllib. | `descargar()` con reserva: si urllib falla por SSL, descarga con `curl` (sigue sin dependencias). |
+| 3 | 3. Datos | Eurostat publica banderas por observación (`b` corte, `e` estimado, `p` provisional) en `OBS_FLAG`. La skill habla de cortes y provisionales pero no de dónde salen ni cómo guardarlos. | Guía para fuentes con banderas por dato. | Plantilla de lector SDMX-CSV de Eurostat (`observaciones()`) que guarda la bandera en el JSON (`f`) y regla: el gráfico la marca (discontinua, nota) y el texto la dice. |
+| 4 | 3. Datos | `procedencia.json` solo admite una `url`. Con APIs, la URL de descarga (SDMX) no sirve al lector; la útil es la del navegador de datos. | Distinguir URL para el lector y URL de descarga. | Campo `web` (lector, va en `url`) y `datos` (descarga reproducible) en `FUENTES` y en `procedencia.json`. |
+| 5 | 3. Datos | `descargar()` deduce la extensión del path de la URL: con `…/yth_demo_030/?format=SDMX-CSV` sale `.txt`. | Extensión explícita. | Campo opcional `ext` en `FUENTES` o nombre fijo `<clave>.<ext>`. |
+| 6 | 3. Código | `tsconfig` del scaffold con `lib: ES2020`: `.at()` y `findLastIndex` no compilan (11 errores de lint). | Lib moderna o aviso. | `lib`/`target` ES2023 en tsconfig y `build.target: 'es2022'` en Vite (Safari ≥ 15.4). |
+| 7 | 4. QA | **Grave.** `cifras.mjs` añade cocientes y porcentajes entre todos los números de cada JSON (años incluidos). Con datos densos en % (cientos de valores con un decimal), el 99 % de cifras inventadas entre 10 y 100 sale «respaldada»: el informe decía «0 sin respaldo» sin revisar nada. | Saber cuándo el informe no vale y un modo que no derive. | `ESTRICTO=1` (solo valores y redondeos), claves `anio`/`year`/`id` fuera de los cocientes y un aviso automático con el % de cifras al azar que pasarían. |
+| 8 | 4. QA | `cifras.mjs` leía el SVG a mitad de transición (Austria «24,9» cuando el dato es 25,0). | Leer el estado final. | Abrir la página con `reducedMotion: 'reduce'`. |
+| 9 | 1. Concepto / Rigor | La tabla `ilc_lvps08` cuenta como «vive con sus padres» también a quien aporta o recibe ingresos de ese hogar. Lo encontré por la prensa, no por la skill. El QA de rigor solo tenía el ejemplo del piloto («hechos conocidos no son delitos»). | Regla general: leer la etiqueta y metadatos exactos del indicador. | En Fase 1 y en `qa.md`: copiar la etiqueta oficial del indicador y decir en la página qué mide y qué no. |
+| 10 | 2. Guion | Dos indicadores de encuestas distintas (EU-SILC y EU-LFS) para la misma historia. La skill no dice nada de combinar fuentes. | Regla. | En `qa.md`: no mezclar en una cuenta indicadores de fuentes distintas; decirlo en el cierre. |
+| 11 | 3. Código | `pct()` espera una fracción (0,502); Eurostat da porcentajes ya hechos (50,2). Faltaban formatos de un decimal, puntos porcentuales, «uno de cada N» y listas «A, B y C». | Formatos para datos ya en %. | `dec1`, `pc`, `puntos`, `unoDeCada`, `lista` en `lib/formato.ts` del scaffold. |
+| 12 | 1. Concepto | El patrón de mapa solo cubre provincias de España (es-atlas). Para países europeos no hay guía; usé barras que se reordenan. | Nota para comparaciones entre países. | En `patrones.md`: para países de la UE, barras que se reordenan; si hace falta mapa, GISCO de Eurostat con su aviso de copyright de EuroGeographics. |
+| 13 | 4. QA | «Contraste con otra publicación»: la skill propone nota de prensa o informe anual (pensado para el Ministerio del Interior). Con Eurostat la vía es la nota «Eurostat news» de la publicación y su cobertura en prensa; y otra vía de la misma fuente es la API JSON (`statistics/1.0`). | Pistas por tipo de fuente. | En `qa.md`: para APIs, comprobar 3 valores por un endpoint distinto del de descarga. |
+
+## Lo que funcionó sin cambios
+- `Scrolly`, `Figura`, `useTransicion` y `useTamano` sirvieron tal cual para cuatro escenas y cuatro patrones distintos (unidad humana, dos series y su hueco, barras que se reordenan, escala que cambia).
+- `estados.mjs` a 1440×900, 390×844 y con `REDUCIDO=1`: sin errores ni enlaces rotos.
+- `procedencia.json` con varias fuentes y `Figura` con fuente corta: bien.
