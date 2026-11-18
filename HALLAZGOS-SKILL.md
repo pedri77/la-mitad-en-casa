@@ -22,3 +22,8 @@ Formato: fase · qué pasó · qué faltaba en la skill · arreglo propuesto.
 - `Scrolly`, `Figura`, `useTransicion` y `useTamano` sirvieron tal cual para cuatro escenas y cuatro patrones distintos (unidad humana, dos series y su hueco, barras que se reordenan, escala que cambia).
 - `estados.mjs` a 1440×900, 390×844 y con `REDUCIDO=1`: sin errores ni enlaces rotos.
 - `procedencia.json` con varias fuentes y `Figura` con fuente corta: bien.
+
+## Después de publicar
+| # | Fase | Qué pasó | Qué faltaba | Arreglo aplicado |
+|---|---|---|---|---|
+| 14 | Publicación | El primer despliegue falló en CI: `node --test tests/` con Node 22 (el de `pages.yml`) no acepta una carpeta («Cannot find module …/tests»). En local, con Node 26, sí. | Probar el script de test con la versión de Node del CI. | `"test": "node --test 'tests/**/*.test.ts'"` en el scaffold (probado con Node 22.18 y 26). |
